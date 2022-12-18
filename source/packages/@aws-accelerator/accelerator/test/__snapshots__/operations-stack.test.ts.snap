@@ -1,0 +1,505 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OperationsStack Construct(OperationsStack):  Snapshot Test 1`] = `
+Object {
+  "Resources": Object {
+    "AdministratorsA37EF73A": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM4",
+              "reason": "Groups created as per accelerator iam-config needs AWS managed policy",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "GroupName": "Administrators",
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AdministratorAccess",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Group",
+    },
+    "BackupKey60B97760": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "Description": "AWS Accelerator Backup Kms Key",
+        "EnableKeyRotation": true,
+        "KeyPolicy": Object {
+          "Statement": Array [
+            Object {
+              "Action": "kms:*",
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::111111111111:root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::KMS::Key",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "BackupKeyAliasA9FE2B6D": Object {
+      "Properties": Object {
+        "AliasName": "alias/accelerator/kms/backup/key",
+        "TargetKeyId": Object {
+          "Fn::GetAtt": Array [
+            "BackupKey60B97760",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::KMS::Alias",
+    },
+    "BackupRoleF43CFD90": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM4",
+              "reason": "IAM Role created as per accelerator iam-config needs AWS managed policy",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "backup.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup",
+              ],
+            ],
+          },
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSBackupServiceRolePolicyForRestores",
+              ],
+            ],
+          },
+        ],
+        "RoleName": "Backup-Role",
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "BackupVaultBackupVaultACBCC720": Object {
+      "DeletionPolicy": "Retain",
+      "Properties": Object {
+        "BackupVaultName": "BackupVault",
+        "EncryptionKeyArn": Object {
+          "Fn::GetAtt": Array [
+            "BackupKey60B97760",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Backup::BackupVault",
+      "UpdateReplacePolicy": "Retain",
+    },
+    "BreakGlassUser01AA051328": Object {
+      "Properties": Object {
+        "Groups": Array [
+          Object {
+            "Ref": "AdministratorsA37EF73A",
+          },
+        ],
+        "LoginProfile": Object {
+          "Password": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "{{resolve:secretsmanager:",
+                Object {
+                  "Ref": "BreakGlassUser01Secret8A54324D",
+                },
+                ":SecretString:password::}}",
+              ],
+            ],
+          },
+          "PasswordResetRequired": true,
+        },
+        "PermissionsBoundary": Object {
+          "Ref": "DefaultBoundaryPolicy489A8D26",
+        },
+        "UserName": "breakGlassUser01",
+      },
+      "Type": "AWS::IAM::User",
+    },
+    "BreakGlassUser01Secret8A54324D": Object {
+      "DeletionPolicy": "Delete",
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-SMG4",
+              "reason": "Accelerator users created as per iam-config file, MFA usage is enforced with boundary policy",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "GenerateSecretString": Object {
+          "GenerateStringKey": "password",
+          "SecretStringTemplate": "{\\"username\\":\\"breakGlassUser01\\"}",
+        },
+        "Name": "/accelerator/breakGlassUser01",
+      },
+      "Type": "AWS::SecretsManager::Secret",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "BreakGlassUser02DFF444C8": Object {
+      "Properties": Object {
+        "Groups": Array [
+          Object {
+            "Ref": "AdministratorsA37EF73A",
+          },
+        ],
+        "LoginProfile": Object {
+          "Password": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "{{resolve:secretsmanager:",
+                Object {
+                  "Ref": "BreakGlassUser02Secret4D200D8D",
+                },
+                ":SecretString:password::}}",
+              ],
+            ],
+          },
+          "PasswordResetRequired": true,
+        },
+        "PermissionsBoundary": Object {
+          "Ref": "DefaultBoundaryPolicy489A8D26",
+        },
+        "UserName": "breakGlassUser02",
+      },
+      "Type": "AWS::IAM::User",
+    },
+    "BreakGlassUser02Secret4D200D8D": Object {
+      "DeletionPolicy": "Delete",
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-SMG4",
+              "reason": "Accelerator users created as per iam-config file, MFA usage is enforced with boundary policy",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "GenerateSecretString": Object {
+          "GenerateStringKey": "password",
+          "SecretStringTemplate": "{\\"username\\":\\"breakGlassUser02\\"}",
+        },
+        "Name": "/accelerator/breakGlassUser02",
+      },
+      "Type": "AWS::SecretsManager::Secret",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "DefaultBoundaryPolicy489A8D26": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM5",
+              "reason": "Policies definition are derived from accelerator iam-config boundary-policy file",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "Description": "",
+        "ManagedPolicyName": "Default-Boundary-Policy",
+        "Path": "/",
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "*",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Condition": Object {
+                "Bool": Object {
+                  "aws:MultiFactorAuthPresent": "false",
+                  "aws:ViaAWSService": "false",
+                },
+              },
+              "Effect": "Deny",
+              "NotAction": Array [
+                "iam:CreateVirtualMFADevice",
+                "iam:DeleteVirtualMFADevice",
+                "iam:ListVirtualMFADevices",
+                "iam:EnableMFADevice",
+                "iam:ResyncMFADevice",
+                "iam:ListAccountAliases",
+                "iam:ListUsers",
+                "iam:ListSSHPublicKeys",
+                "iam:ListAccessKeys",
+                "iam:ListServiceSpecificCredentials",
+                "iam:ListMFADevices",
+                "iam:GetAccountSummary",
+                "sts:GetSessionToken",
+              ],
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "Ec2DefaultSsmAdRoleADFFA4C6": Object {
+      "Metadata": Object {
+        "cdk_nag": Object {
+          "rules_to_suppress": Array [
+            Object {
+              "id": "AwsSolutions-IAM4",
+              "reason": "IAM Role created as per accelerator iam-config needs AWS managed policy",
+            },
+          ],
+        },
+      },
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "ec2.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AmazonSSMManagedInstanceCore",
+              ],
+            ],
+          },
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AmazonSSMDirectoryServiceAccess",
+              ],
+            ],
+          },
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/CloudWatchAgentServerPolicy",
+              ],
+            ],
+          },
+        ],
+        "PermissionsBoundary": Object {
+          "Ref": "DefaultBoundaryPolicy489A8D26",
+        },
+        "RoleName": "EC2-Default-SSM-AD-Role",
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "Ec2DefaultSsmAdRoleInstanceProfile": Object {
+      "Properties": Object {
+        "InstanceProfileName": Object {
+          "Ref": "Ec2DefaultSsmAdRoleADFFA4C6",
+        },
+        "Roles": Array [
+          Object {
+            "Ref": "Ec2DefaultSsmAdRoleADFFA4C6",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "SsmParamAcceleratorVersionFF83282D": Object {
+      "Properties": Object {
+        "Name": "/accelerator/AWSAccelerator-OperationsStack-111111111111-us-east-1/version",
+        "Type": "String",
+        "Value": "1.2.2",
+      },
+      "Type": "AWS::SSM::Parameter",
+    },
+    "SsmParamStackId521A78D3": Object {
+      "Properties": Object {
+        "Name": "/accelerator/AWSAccelerator-OperationsStack-111111111111-us-east-1/stack-id",
+        "Type": "String",
+        "Value": Object {
+          "Ref": "AWS::StackId",
+        },
+      },
+      "Type": "AWS::SSM::Parameter",
+    },
+    "accelbudgetBudgetDefinitionaccelbudget73707CCE": Object {
+      "Properties": Object {
+        "Budget": Object {
+          "BudgetLimit": Object {
+            "Amount": 2000,
+            "Unit": "USD",
+          },
+          "BudgetName": "accel-budget",
+          "BudgetType": "COST",
+          "CostTypes": Object {
+            "IncludeCredit": false,
+            "IncludeDiscount": true,
+            "IncludeOtherSubscription": true,
+            "IncludeRecurring": true,
+            "IncludeRefund": false,
+            "IncludeSubscription": true,
+            "IncludeSupport": true,
+            "IncludeTax": true,
+            "IncludeUpfront": true,
+            "UseAmortized": false,
+            "UseBlended": false,
+          },
+          "TimeUnit": "MONTHLY",
+        },
+        "NotificationsWithSubscribers": Array [
+          Object {
+            "Notification": Object {
+              "ComparisonOperator": "GREATER_THAN",
+              "NotificationType": "ACTUAL",
+              "Threshold": 100,
+              "ThresholdType": "PERCENTAGE",
+            },
+            "Subscribers": Array [
+              Object {
+                "Address": "myemail+pa-budg@example.com",
+                "SubscriptionType": "EMAIL",
+              },
+            ],
+          },
+          Object {
+            "Notification": Object {
+              "ComparisonOperator": "GREATER_THAN",
+              "NotificationType": "ACTUAL",
+              "Threshold": 90,
+              "ThresholdType": "PERCENTAGE",
+            },
+            "Subscribers": Array [
+              Object {
+                "Address": "myemail+pa-budg@example.com",
+                "SubscriptionType": "EMAIL",
+              },
+            ],
+          },
+          Object {
+            "Notification": Object {
+              "ComparisonOperator": "GREATER_THAN",
+              "NotificationType": "ACTUAL",
+              "Threshold": 80,
+              "ThresholdType": "PERCENTAGE",
+            },
+            "Subscribers": Array [
+              Object {
+                "Address": "myemail+pa-budg@example.com",
+                "SubscriptionType": "EMAIL",
+              },
+            ],
+          },
+          Object {
+            "Notification": Object {
+              "ComparisonOperator": "GREATER_THAN",
+              "NotificationType": "ACTUAL",
+              "Threshold": 75,
+              "ThresholdType": "PERCENTAGE",
+            },
+            "Subscribers": Array [
+              Object {
+                "Address": "myemail+pa-budg@example.com",
+                "SubscriptionType": "EMAIL",
+              },
+            ],
+          },
+          Object {
+            "Notification": Object {
+              "ComparisonOperator": "GREATER_THAN",
+              "NotificationType": "ACTUAL",
+              "Threshold": 50,
+              "ThresholdType": "PERCENTAGE",
+            },
+            "Subscribers": Array [
+              Object {
+                "Address": "myemail+pa-budg@example.com",
+                "SubscriptionType": "EMAIL",
+              },
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::Budgets::Budget",
+    },
+  },
+}
+`;
